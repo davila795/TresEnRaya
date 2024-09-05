@@ -8,11 +8,15 @@ namespace TresEnRaya
 {
     internal class Juego
     {
-        static void Main(string[] args)
-        {
+        Tablero tablero {  get; set; }
+        Jugador jugador { get; set; }
 
+        public Juego()
+        {
+            tablero = new Tablero();
+            jugador = new Jugador();
+            tablero.PrintBoard();
+            Console.ReadLine();
         }
     }
-
-
 }
