@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -9,7 +10,8 @@ namespace TresEnRaya
 {
     internal class Program
     {
-        static char[] tablero = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        static int numTablas = 0;
+        static char[,] tablero;
         static int turno = 1;
         static char ficha = 'X';
         static bool finJuego = false;
@@ -17,6 +19,27 @@ namespace TresEnRaya
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Di el tamañano del tablero: ");
+            int.TryParse(Console.ReadLine(), out numTablas);
+            //tableroNumeros = new int[numTablas, numTablas];
+            tablero = new char[numTablas, numTablas];
+            //Rellenar el tablero inicial de numeros
+            //for (int i = 0; i < tableroNumeros.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < tableroNumeros.GetLength(1); j++)
+            //    {
+            //        int rellenar = i * j;
+            //        tableroNumeros[i, j] = rellenar;
+            //    }
+            //}
+
+            for (int i = 0; i < tablero.GetLength(0); i++)
+            {
+                for (int j = 0; j < tablero.GetLength(1); j++)
+                {
+                    tablero[i, j] = '*';
+                }
+            }
             PintarTablero();
 
             while (!finJuego)
@@ -30,21 +53,34 @@ namespace TresEnRaya
             }
 
             if (ganador > 0)
+            {
                 Console.WriteLine($"JUGADOR {ganador} GANA!");
+                Console.ReadKey();
+            }
             else
+            {
                 Console.WriteLine("EMPATE!");
+                Console.ReadKey();
+            }
 
         }
 
         static void PintarTablero()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < tablero.GetLength(0); i++)
             {
-                for (int j = 0; j < 3; j++)
+                Console.Write(i + 1);
+
+                for (int j = 0; j < tablero.GetLength(1); j++)
                 {
-                    Console.Write(tablero[i * 3 + j] + "|");
+                    Console.Write(tablero[i, j] + "|");
                 }
-                Console.WriteLine("\n------");
+                Console.WriteLine("  \n------------------------");
+            }
+
+            for (int i = 1; i <= numTablas; i++)
+            {
+                Console.Write($" {i}");
             }
         }
 
@@ -63,40 +99,33 @@ namespace TresEnRaya
 
         static bool ComprobarVictoria()
         {
-            //  Fila 1
-            if (tablero[0] == tablero[1] && tablero[1] == tablero[2])
-                return true;
-            //  Fila 2
-            if (tablero[3] == tablero[4] && tablero[4] == tablero[5])
-                return true;
-            //  Fila 3
-            if (tablero[6] == tablero[7] && tablero[7] == tablero[8])
-                return true;
-            //  Columna 1
-            if (tablero[0] == tablero[3] && tablero[3] == tablero[6])
-                return true;
-            //  Columna 2
-            if (tablero[1] == tablero[4] && tablero[4] == tablero[7])
-                return true;
-            //  Columna 3
-            if (tablero[2] == tablero[5] && tablero[5] == tablero[8])
-                return true;
-            //Diagonal 1
-            if (tablero[0] == tablero[4] && tablero[4] == tablero[8])
-                return true;
-            //Diagonal 2
-            if (tablero[2] == tablero[4] && tablero[4] == tablero[6])
-                return true;
+            for (int i = 0; i < numTablas; i++)
+            {
+                bool condicion = true;
+                char temp1 = tablero[i, 0];
+                for (int j = 0; j < numTablas; j++)
+                {
+                    char temp2 = tablero[0, j];
 
+                    char posicionTablero = tablero[i, j];
+                    if (temp1 != posicionTablero || temp1 == '*')
+                        condicion = false;
+                }
+                if (condicion)
+                    return true;
+            }
             return false;
         }
 
         static bool ComprobarEmpate()
         {
-            for (int i = 0; i < tablero.Length; i++)
+            for (int i = 0; i < tablero.GetLength(0); i++)
             {
-                if (tablero[i] != 'X' && tablero[i] != 'O')
-                    return false;
+                for (int j = 0; j < tablero.GetLength(1); j++)
+                {
+                    if (tablero[i, j] != 'X' && tablero[i, j] != 'O')
+                        return false;
+                }
             }
             return true;
         }
@@ -104,46 +133,77 @@ namespace TresEnRaya
         static void Mover()
         {
             bool movimientoCorrecto = false;
-            int casilla;
+            //Maquina simbolo O (jugador 2)
+            //Jugador simbolo X (jugador 1)
+            Random rnd = new Random();
+            int casilla1 = 0;
+            int casilla2 = 0;
 
             do
             {
-                Console.Write($"Jugador {turno} selecciona una casilla: ");
-                string inputCasilla = Console.ReadLine();
+                Console.Write($"Jugador {turno} selecciona la casilla mediante dos posiciones x,y: ");
 
-                if (int.TryParse(inputCasilla, out casilla))
-                    movimientoCorrecto = ComprobarMovimiento(casilla);
+                if (turno == 1)
+                {
+                    Console.Write($"Jugador {turno} selecciona la primera posición: ");
+                    string inputCasilla1 = Console.ReadLine();
 
-                if (!movimientoCorrecto)
-                    Console.WriteLine("Por favor, selecciona una casilla valida");
+                    Console.Write($"Jugador {turno} selecciona la primera posición: ");
+                    string inputCasilla2 = Console.ReadLine();
+
+                    if (int.TryParse(inputCasilla1, out casilla1) && int.TryParse(inputCasilla2, out casilla2))
+                    {
+                        movimientoCorrecto = ComprobarMovimiento(casilla1, casilla2);
+                    }
+
+                    if (!movimientoCorrecto)
+                        Console.WriteLine("Por favor, selecciona una casilla válida");
+
+                }
+                else if (turno == 2)
+                {
+                    casilla1 = rnd.Next(1, (numTablas * numTablas));
+                    casilla2 = rnd.Next(1, (numTablas * numTablas));
+
+                    movimientoCorrecto = ComprobarMovimiento(casilla1, casilla2);
+
+                    if (!movimientoCorrecto)
+                        Console.WriteLine("Por favor, selecciona una casilla válida");
+                }
 
             } while (!movimientoCorrecto);
 
-            tablero[casilla - 1] = ficha;
+            if (turno == 1)
+            {
+                tablero[casilla1 - 1, casilla2 - 1] = ficha;
+            }
+            else
+            {
+                tablero[casilla1 - 1, casilla2 - 1] = ficha;
+            }
         }
 
-        static bool ComprobarMovimiento(int casilla)
+        static bool ComprobarMovimiento(int posicion1, int posicion2)
         {
-            bool movimientoValido = casilla > 0
-                && casilla <= tablero.Length
-                && tablero[casilla - 1] != 'X'
-                && tablero[casilla - 1] != 'O';
+            if (posicion1 < 1 || posicion1 > tablero.GetLength(0) || posicion2 < 1 || posicion2 > tablero.GetLength(1))
+            {
+                return false;
+            }
 
-            return movimientoValido;
+            return tablero[posicion1 - 1, posicion2 - 1] != 'X' && tablero[posicion1 - 1, posicion2 - 1] != 'O';
         }
 
         static void CambiarTurno()
         {
-            //  cambiar tambien la ficha
             if (turno == 1)
             {
                 ficha = 'O';
-                turno++;
+                turno = 2;
             }
             else
             {
                 ficha = 'X';
-                turno--;
+                turno = 1;
             }
         }
     }
