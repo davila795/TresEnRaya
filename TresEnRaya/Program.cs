@@ -111,10 +111,11 @@ namespace TresEnRaya
 
         static bool ComprobarVictoria()
         {
+            bool condicion = true;
+
             // Check horizontal win condition
             for (int i = 0; i < numTablas; i++)
             {
-                bool condicion = true;
                 char temp1 = tablero[i, 0];
                 for (int j = 0; j < numTablas; j++)
                 {
@@ -129,13 +130,46 @@ namespace TresEnRaya
             // Check vertical win condition
             for (int j = 0; j < numTablas; j++)
             {
-                bool condicion = true;
+                condicion = true;
                 char temp1 = tablero[0, j];
                 for (int i = 0; i < numTablas; i++)
                 {
                     char posicionTablero = tablero[i, j];
                     if (temp1 != posicionTablero || temp1 == '*')
                         condicion = false;
+                }
+                if (condicion)
+                    return true;
+            }
+
+            // Check diagonal win condition
+            char tempDiagonal = tablero[0, 0];
+            for (int i = 1; i < numTablas; i++)
+            {
+                condicion = true;
+                if (tempDiagonal != tablero[i, i] || tempDiagonal == '*')
+                {
+                    condicion = false;
+                }
+            }
+            if (condicion)
+                return true;
+
+
+
+            int posFinal = numTablas - 1;
+            char tempFinal = tablero[0, posFinal];
+
+            if (tempFinal != '*')
+            {
+                for (int i = 1; i < numTablas; i++)
+                {
+                    condicion = true;
+
+                    if (tempFinal != tablero[i, posFinal - i])
+                    {
+                        condicion = false;
+                    }
                 }
                 if (condicion)
                     return true;
