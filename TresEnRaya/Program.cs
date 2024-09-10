@@ -23,15 +23,6 @@ namespace TresEnRaya
             int.TryParse(Console.ReadLine(), out numTablas);
             //tableroNumeros = new int[numTablas, numTablas];
             tablero = new char[numTablas, numTablas];
-            //Rellenar el tablero inicial de numeros
-            //for (int i = 0; i < tableroNumeros.GetLength(0); i++)
-            //{
-            //    for (int j = 0; j < tableroNumeros.GetLength(1); j++)
-            //    {
-            //        int rellenar = i * j;
-            //        tableroNumeros[i, j] = rellenar;
-            //    }
-            //}
 
             for (int i = 0; i < tablero.GetLength(0); i++)
             {
@@ -40,6 +31,7 @@ namespace TresEnRaya
                     tablero[i, j] = '*';
                 }
             }
+
             PintarTablero();
 
             while (!finJuego)
@@ -97,16 +89,35 @@ namespace TresEnRaya
                 return ComprobarEmpate();
         }
 
+        //static bool ComprobarVictoria()
+        //{
+        //    for (int i = 0; i < numTablas; i++)
+        //    {
+        //        bool condicion = true;
+        //        char temp1 = tablero[i, 0];
+        //        for (int j = 0; j < numTablas; j++)
+        //        {
+        //            char temp2 = tablero[0, j];
+
+        //            char posicionTablero = tablero[i, j];
+        //            if (temp1 != posicionTablero || temp1 == '*')
+        //                condicion = false;
+        //        }
+        //        if (condicion)
+        //            return true;
+        //    }
+        //    return false;
+        //}
+
         static bool ComprobarVictoria()
         {
+            // Check horizontal win condition
             for (int i = 0; i < numTablas; i++)
             {
                 bool condicion = true;
                 char temp1 = tablero[i, 0];
                 for (int j = 0; j < numTablas; j++)
                 {
-                    char temp2 = tablero[0, j];
-
                     char posicionTablero = tablero[i, j];
                     if (temp1 != posicionTablero || temp1 == '*')
                         condicion = false;
@@ -114,6 +125,22 @@ namespace TresEnRaya
                 if (condicion)
                     return true;
             }
+
+            // Check vertical win condition
+            for (int j = 0; j < numTablas; j++)
+            {
+                bool condicion = true;
+                char temp1 = tablero[0, j];
+                for (int i = 0; i < numTablas; i++)
+                {
+                    char posicionTablero = tablero[i, j];
+                    if (temp1 != posicionTablero || temp1 == '*')
+                        condicion = false;
+                }
+                if (condicion)
+                    return true;
+            }
+
             return false;
         }
 
