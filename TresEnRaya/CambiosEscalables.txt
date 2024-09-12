@@ -1,0 +1,12 @@
+**Ya no haria falta de lineas ganadoras:
+
+Comprobar fila/col/diag ganadora (char ficha)
+	- para cada fila/col/diag comprobar si todos sus elementos son iguales a ficha. Usa un counter para igualar a N, el counter aumenta en 1 cada vez que hay una ficha igual. Return true si el counter es igual a N.
+
+Comprobar fila/col/diag ganadora (char ficha, int numeroDeFichas)
+	- para cada fila/col/diag comprobar si hay el numeroDeFichas(ejemplo 2 para 3 en raya) y que no haya la ficha del oponente. Usa 2 counter para comprobar si ficha es igual al numeroDeFichas y otro para comprobar que no haya la ficha del oponente.
+
+Comprobar fila/col/diag adyacente
+	- que la fila/col/diag contenga la ficha y no contenga la ficha del oponente.
+
+**Eliminar funciones de eliminarPosicionDeLineasGanadoras y marcarPosicionDeLineasGanadoras
